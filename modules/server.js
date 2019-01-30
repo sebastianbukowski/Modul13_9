@@ -1,14 +1,11 @@
 var http = require('http');
 var colors = require('colors');
-var path = require('path');
-console.log(__dirname);
 var handlers = require('./handlers'); // nasz moduł
 
 function start() {
     function onRequest(request, response) {
         console.log("Odebrano zapytanie.".green);
         console.log("Zapytanie " + request.url + " odebrane.");
-        response.writeHead(200, {"Content-Type": "text/plain; charset=utf-8"});
         switch (request.url) {
             case '/':
             case '/start':

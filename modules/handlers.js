@@ -1,5 +1,4 @@
 var fs = require('fs');
-
 var formidable = require('formidable');
 var fileName = '';
 var uploadDir = './upload/';
@@ -38,9 +37,9 @@ exports.welcome = function(request, response) {
 }
 
 exports.show = function(request, response) {
-    console.log(fileName);
-    console.log('fileUrl', fileUrl);
+    console.log(fileName);  
     fileUrl = uploadDir + fileName;
+    console.log('fileUrl', fileUrl);
     fs.readFile(fileUrl, "binary", function(error, file) {
         response.writeHead(200, {"Content-Type": "image/png"});
         response.write(file, "binary");
