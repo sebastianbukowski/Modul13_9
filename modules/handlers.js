@@ -2,18 +2,30 @@ var fs = require('fs');
 
 var formidable = require('formidable');
 var fileName = '';
+var uploadDir = './upload/';
+var fileUrl = '';
 
 exports.upload = function(request, response) {
     console.log("Rozpoczynam obsługę żądania upload.");
     var form = new formidable.IncomingForm();
+    form.uploadDir = uploadDir;
     form.keepExtensions = true;
+    
     form.parse(request, function(error, fields, files) {
-        fs.renameSync(files.upload.path, files.upload.name);
+        console.log(fields);
+        console.log(files.upload.name);
+        console.log(files.upload.path);
+        if(fields.title && fields.title.length !== 0) {
+            fileName = fields.title;
+        } else {
+            fileName = files.upload.name;
+        }
+        console.log(fileName);
+        fs.renameSync(files.upload.path, form.uploadDir + fileName );
         response.writeHead(200, {"Content-Type": "text/html"});
         response.write("received image:<br/>");
         response.write("<img src='/show' />");
         response.end();
-        fileName = files.upload.name; 
     });
 }
 exports.welcome = function(request, response) {
@@ -26,7 +38,10 @@ exports.welcome = function(request, response) {
 }
 
 exports.show = function(request, response) {
-    fs.readFile(fileName, "binary", function(error, file) {
+    console.log(fileName);
+    console.log('fileUrl', fileUrl);
+    fileUrl = uploadDir + fileName;
+    fs.readFile(fileUrl, "binary", function(error, file) {
         response.writeHead(200, {"Content-Type": "image/png"});
         response.write(file, "binary");
         response.end();
